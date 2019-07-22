@@ -1,0 +1,15 @@
+*.iml
+.gradle
+/local.properties
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+/app/build
+/app/.externalNativeBuild
+gradle
+gradlew
+gradlew.bat
+.idea
+/rtmpfile/%APPDATA%
+%APPDATA%
