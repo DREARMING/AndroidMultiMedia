@@ -101,7 +101,7 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
 
     const char *inUrl = path;
     //输出的地址
-    const char *outUrl = "rtmp://192.168.1.105:1935/live/test2";
+    const char *outUrl = "rtmp://192.168.1.101:1935/live/test2";
 
     //////////////////////////////////////////////////////////////////
     //                   输入流处理部分
@@ -114,6 +114,8 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
     AVFormatContext *ictx = NULL;
 
     AVFormatContext *octx = NULL;
+
+    AVInputFormat* inputFormat = NULL;
 
     AVPacket pkt;
     int ret = 0;
@@ -131,9 +133,7 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
             avError(ret);
             throw ret;
         }
-        //打印视频视频信息
-        //0打印所有  inUrl 打印时候显示，
-        av_dump_format(ictx, 0, inUrl, 0);
+
 
         //////////////////////////////////////////////////////////////////
         //                   输出流处理部分
@@ -153,6 +153,11 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
 
             //获取输入视频流
             AVStream *in_stream = ictx->streams[i];
+
+            //打印视频视频信息
+            //0打印所有  inUrl 打印时候显示，
+            av_dump_format(ictx, in_stream->index, inUrl, 0);
+
             //为输出上下文添加音视频流（初始化一个音视频流容器）
             AVStream *out_stream = avformat_new_stream(octx, in_stream->codec->codec);
             if (!out_stream) {
@@ -190,6 +195,7 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
         //AVDictionary* ioOpts = NULL;
 
         //av_dict_set(&ioOpts, "timeout", "10000", 0);
+
 
         //打开IO
         ret = avio_open(&octx->pb, outUrl, AVIO_FLAG_WRITE);
@@ -243,6 +249,8 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
                 pkt.pts = (double) (frame_index * calc_duration) /
                           (double) (av_q2d(time_base1) * AV_TIME_BASE);
                 pkt.dts = pkt.pts;
+
+                //duration 是 以 time_base 为单位的，所以这里除掉 timebase， timebase 是 微妙为单位的，所以这里处理1000000
                 pkt.duration =
                         (double) calc_duration / (double) (av_q2d(time_base1) * AV_TIME_BASE);
             }
@@ -356,6 +364,8 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_initVideo(JNIEnv *env, jobject i
     uv_length = width * height / 4;
 
     av_register_all();
+
+    avformat_network_init();
 
     //output initialize
     avformat_alloc_output_context2(&ofmt_ctx, NULL, "flv", out_path);

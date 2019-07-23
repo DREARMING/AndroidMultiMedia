@@ -61,7 +61,7 @@ public class VideoFileRtmpFFmpegActivity extends Activity {
 
 
     public void btnPush(View view) {
-        final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "main.flv";
+        final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + "main.flv";
         final File file = new File(path);
         //Uri uri = FileProvider.getUriForFile(this, "com.mvcoder.fileprovider", file);
         LogUtils.d(path + "  " + file.exists());
