@@ -72,6 +72,7 @@ public class CameraFFmpegPushRtmpActivity extends Activity implements SurfaceHol
         }
         params.setPictureSize(WIDTH, HEIGHT);
         params.setPreviewSize(WIDTH, HEIGHT);
+        LogUtils.d("preview and picture size :  width" + WIDTH + " , h :" + HEIGHT);
         params.setPreviewFpsRange(30000, 30000);
         List<String> focusModes = params.getSupportedFocusModes();
         if (focusModes.contains("continuous-video")) {

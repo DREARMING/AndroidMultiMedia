@@ -115,7 +115,15 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
 
     AVFormatContext *octx = NULL;
 
-    AVInputFormat* inputFormat = NULL;
+    AVIOContext* ioc;
+
+    AVCodec* avCodec;
+
+    AVStream* avStream1;
+
+    AVOutputFormat* avOutputFormat1;
+
+
 
     AVPacket pkt;
     int ret = 0;
@@ -194,8 +202,7 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_pushRtmpFile(JNIEnv *env, jobjec
 
         //AVDictionary* ioOpts = NULL;
 
-        //av_dict_set(&ioOpts, "timeout", "10000", 0);
-
+        //av_dict_set(&ioOpts, "timeout", "10000", 0)
 
         //打开IO
         ret = avio_open(&octx->pb, outUrl, AVIO_FLAG_WRITE);
@@ -340,11 +347,11 @@ int yuv_width;
 int yuv_height;
 int y_length;
 int uv_length;
-int width = 480;
-//int width = 640;
-int height = 320;
-//int height = 480;
-int fps = 15;
+//int width = 480;
+int width = 640;
+//int height = 320;
+int height = 480;
+int fps = 25;
 
 /**
  * 初始化
@@ -447,6 +454,8 @@ Java_com_wangheart_rtmpfile_ffmpeg_FFmpegHandle_initVideo(JNIEnv *env, jobject i
 
     //Write File Header
     avformat_write_header(ofmt_ctx, NULL);
+
+    env->ReleaseStringUTFChars(url_, out_path);
 
     return 0;
 }

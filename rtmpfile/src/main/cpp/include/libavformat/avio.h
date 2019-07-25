@@ -313,7 +313,7 @@ typedef struct AVIOContext {
      */
     enum AVIODataMarkerType current_type;
     int64_t last_time;
-} AVIOContext;
+}   AVIOContext;
 
 /**
  * Return the name of the protocol that will handle the passed URL.
